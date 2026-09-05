@@ -1,0 +1,136 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Unbounded:wght@400;600;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 8 8 12;
+  --foreground: 226 232 240;
+  --font-primary: 'Space Mono', monospace;
+  --font-display: 'Unbounded', sans-serif;
+}
+
+body {
+  background-color: #08080C;
+  color: #E2E8F0;
+  font-family: var(--font-primary);
+  background-image:
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.03) 0%, transparent 60%),
+    radial-gradient(circle at 100% 100%, rgba(200, 200, 200, 0.02) 0%, transparent 50%);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+
+/* Film Grain Overlay */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9990;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+  opacity: 0.6;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* Igloo Typography Styles */
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+.font-telemetry {
+  font-family: 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Panel Styling */
+.runic-border {
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  position: relative;
+}
+
+.runic-panel {
+  background: rgba(12, 12, 18, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+/* Rarity Borders */
+.border-rarity-mythic {
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.08) !important;
+}
+.border-rarity-mythic:hover {
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.15) !important;
+}
+
+.border-rarity-legendary {
+  border-color: rgba(229, 229, 229, 0.25) !important;
+  box-shadow: 0 0 20px rgba(229, 229, 229, 0.08) !important;
+}
+.border-rarity-legendary:hover {
+  border-color: rgba(229, 229, 229, 0.5) !important;
+  box-shadow: 0 0 30px rgba(229, 229, 229, 0.15) !important;
+}
+
+.border-rarity-epic {
+  border-color: rgba(163, 163, 163, 0.25) !important;
+  box-shadow: 0 0 20px rgba(163, 163, 163, 0.08) !important;
+}
+.border-rarity-epic:hover {
+  border-color: rgba(163, 163, 163, 0.5) !important;
+  box-shadow: 0 0 30px rgba(163, 163, 163, 0.15) !important;
+}
+
+.border-rarity-rare {
+  border-color: rgba(115, 115, 115, 0.25) !important;
+  box-shadow: 0 0 20px rgba(115, 115, 115, 0.08) !important;
+}
+.border-rarity-rare:hover {
+  border-color: rgba(115, 115, 115, 0.5) !important;
+  box-shadow: 0 0 30px rgba(115, 115, 115, 0.15) !important;
+}
+
+.border-rarity-common {
+  border-color: rgba(64, 64, 64, 0.3) !important;
+  box-shadow: 0 0 10px rgba(64, 64, 64, 0.4) !important;
+}
+.border-rarity-common:hover {
+  border-color: rgba(115, 115, 115, 0.4) !important;
+  box-shadow: 0 0 15px rgba(115, 115, 115, 0.1) !important;
+}
+
+/* Rarity Badges */
+.badge-mythic { background: transparent; color: #FFFFFF; border: none; }
+.badge-legendary { background: transparent; color: #E5E5E5; border: none; }
+.badge-epic { background: transparent; color: #A3A3A3; border: none; }
+.badge-rare { background: transparent; color: #737373; border: none; }
+.badge-common { background: transparent; color: #404040; border: none; }
+
+/* Stats */
+.stat-energy { background: transparent; border: none; color: #FFFFFF; }
+.stat-stability { background: transparent; border: none; color: #D4D4D4; }
+.stat-signal { background: transparent; border: none; color: #A3A3A3; }
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: #08080C; }
+::-webkit-scrollbar-thumb { background: #1A1A24; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #64D2FF; }
