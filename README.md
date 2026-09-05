@@ -14,7 +14,7 @@
 
 | Resource | Direct Link |
 | :--- | :--- |
-| **GitHub Repository** | [https://github.com/Joshan2007/gdg_blockchain](https://github.com/Joshan2007/gdg_blockchain) |
+| **GitHub Repository** | [https://github.com/Joshan2007/foundation-oracle](https://github.com/Joshan2007/foundation-oracle) |
 | **Production dApp (Vercel)** | [https://frontend-beta-wine-27.vercel.app](https://frontend-beta-wine-27.vercel.app) |
 | **Alternate Mirror (Vercel)** | [https://frontend-gwtpnz7an-joshanas2007-1936s-projects.vercel.app](https://frontend-gwtpnz7an-joshanas2007-1936s-projects.vercel.app) |
 | **Target Testnet** | Ethereum Sepolia (Chain ID: `11155111`) / Localhost (Chain ID: `31337`) |
@@ -291,8 +291,8 @@ The smart contract suite comes pre-seeded with 12 reference relics across 5 rari
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/Joshan2007/gdg_blockchain.git
-cd gdg_blockchain
+git clone https://github.com/Joshan2007/foundation-oracle.git
+cd foundation-oracle
 ```
 
 ### 2. Install Root & Hardhat Dependencies
