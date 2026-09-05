@@ -25,10 +25,10 @@
 
 ## 📸 Screenshots & Visual Interface
 
-### 1. Main Marketplace Interface
-*High-resolution view of the 12 Lattice Relics, multi-attribute filter sidebar, wallet status, and glowing rarity frames.*
+### 1. Main Marketplace & Telemetry Interface
+*High-resolution view of the FOUNDATION ORACLE interface featuring live telemetry stats, rarity filters, cybernetic typography, and non-custodial trading controls.*
 
-![Foundation Oracle Marketplace](docs/screenshots/marketplace_overview.jpg)
+![Foundation Oracle Marketplace](docs/screenshots/marketplace_overview.png)
 
 ---
 
@@ -114,38 +114,51 @@ The platform is designed around a dark fantasy sci-fi universe where players tra
 
 ## 🏗️ System Architecture & Data Flow
 
-```text
-                                  ┌─────────────────────────────────────────┐
-                                  │           FOUNDATION ORACLE             │
-                                  │          Next.js 14 Web3 dApp           │
-                                  └────┬───────────────────────────────┬────┘
-                                       │                               │
-                                       ▼                               ▼
-                           ┌───────────────────────┐       ┌───────────────────────┐
-                           │   Relic Forge Studio  │       │   Web3 Provider /     │
-                           │   (/api/ipfs/pin)     │       │   Ethers.js v6 Signer │
-                           └───────────┬───────────┘       └───────────┬───────────┘
-                                       │                               │
-                        1. Generate ERC-721 JSON                       │ 3. Sign & Submit
-                        2. Pin CID (ipfs://Qm...)                      │    Transaction
-                                       │                               │
-                                       ▼                               ▼
-                             ┌───────────────────┐           ┌───────────────────┐
-                             │    IPFS Cluster   │           │ Ethereum Sepolia  │
-                             │   (Pinata Cloud)  │           │    Blockchain     │
-                             └───────────────────┘           └─────────┬─────────┘
-                                                                       │
-                                     ┌─────────────────────────────────┴─────────────────────────────────┐
-                                     │                                                                   │
-                                     ▼                                                                   ▼
-                         ┌───────────────────────┐                                           ┌───────────────────────┐
-                         │    GameCardNFT.sol    │                                           │GameCardMarketplace.sol│
-                         │     (ERC-721: MRC)    │◄────── Approval & Transfer ───────────────┤   (Non-Custodial)     │
-                         ├───────────────────────┤                                           ├───────────────────────┤
-                         │ • mintCard(...)       │                                           │ • listItem(...)       │
-                         │ • tokenURI(...)       │                                           │ • buyItem(...)        │
-                         │ • ownerOf(...)        │                                           │ • cancelListing(...)  │
-                         └───────────────────────┘                                           └───────────────────────┘
+```mermaid
+flowchart TD
+    subgraph ClientApp ["Next.js Web Application (foundation-oracle.vercel.app)"]
+        Wallet["MetaMask Wallet Connector<br/>(EIP-1193 Signer / Provider)"]
+        Cosmic["Cosmic Void Visualizer<br/>(WebGL Canvas Particle Field)"]
+        Audio["Web Audio Synthesizer<br/>(Procedural Zero-Latency Audio)"]
+        MarketUI["Marketplace Grid & Filters<br/>(Non-Custodial Trading)"]
+        ForgeUI["Relic Creator Studio<br/>(Interactive Card Forge)"]
+        HistoryUI["Provenance Explorer<br/>(On-Chain Event Activity Log)"]
+    end
+
+    subgraph StorageLayer ["Decentralized Storage & Metadata Layer"]
+        PinAPI["Next.js Serverless Route<br/>(/api/ipfs/pin)"]
+        IPFSCID["IPFS Deterministic CID Generator<br/>(ERC-721 Metadata Standard)"]
+        Pinata["Pinata Cloud IPFS Gateway<br/>(Metadata & Image Resolution)"]
+    end
+
+    subgraph BlockchainLayer ["Ethereum Sepolia Testnet / Local EVM"]
+        NFTContract["GameCardNFT.sol (ERC-721 MRC)<br/>0x5FbDB2315678afecb367f032d93F642f64180aa3"]
+        MarketContract["GameCardMarketplace.sol (ReentrancyGuard)<br/>0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"]
+        Explorer["Sepolia Etherscan Block Explorer<br/>(Verified On-Chain Logs)"]
+    end
+
+    %% Workflow Connections
+    Wallet -->|Connect & Sign Transactions| ClientApp
+    ClientApp --> MarketUI
+    ClientApp --> ForgeUI
+    ClientApp --> HistoryUI
+    ClientApp -.-> Cosmic
+    ClientApp -.-> Audio
+
+    ForgeUI -->|1. Submit Custom Relic Data| PinAPI
+    PinAPI -->|2. Generate ERC-721 Schema & CID| IPFSCID
+    IPFSCID -->|3. Return ipfs://Qm... URI| ForgeUI
+    ForgeUI -->|4. Client-Side Minting: mintCard(recipient, tokenURI)| NFTContract
+
+    MarketUI -->|ERC-721 Approval & listItem(nft, id, price)| MarketContract
+    MarketUI -->|Atomic buyItem(nft, id) with ETH Payment| MarketContract
+    MarketContract -->|Transfer NFT Ownership to Buyer| NFTContract
+    MarketContract -->|Direct ETH Payout to Seller| Wallet
+
+    NFTContract -.->|Emit CardMinted| Explorer
+    MarketContract -.->|Emit CardListed, CardSold, CardDelisted| Explorer
+    Explorer -->|JSON-RPC queryFilter| HistoryUI
+    Pinata -.->|Resolve TokenURI & Artwork| MarketUI
 ```
 
 ---
@@ -258,27 +271,6 @@ When forging a relic in the Relic Forge Studio, the frontend dispatches a payloa
      return uri;
    };
    ```
-
----
-
-## 🌌 The 12 Initial Lattice Relics
-
-The smart contract suite comes pre-seeded with 12 reference relics across 5 rarity tiers:
-
-| Token ID | Card Name | Archetype | Rarity | Price (ETH) | ☿ Energy | 🛡 Stability | ⚡ Signal |
-| :---: | :--- | :--- | :--- | :---: | :---: | :---: | :---: |
-| `#001` | **Null Shard** | Fragment | `Common` | `0.002` | 34 | 81 | 22 |
-| `#002` | **Aeon Key** | Access Relic | `Legendary` | `0.045` | 91 | 74 | 86 |
-| `#003` | **Ghost Circuit** | Neural Relic | `Epic` | `0.028` | 67 | 43 | 98 |
-| `#004` | **Orbital Relic** | Navigation Artifact | `Rare` | `0.012` | 52 | 76 | 84 |
-| `#005` | **Echo Mask** | Memory Artifact | `Legendary` | `0.038` | 78 | 61 | 94 |
-| `#006` | **Chrono Engine** | Temporal Artifact | `Mythic` | `0.089` | 99 | 28 | 97 |
-| `#007` | **Memory Prism** | Archive Artifact | `Rare` | `0.014` | 63 | 88 | 72 |
-| `#008` | **Gravity Lens** | Physics Artifact | `Epic` | `0.026` | 82 | 67 | 59 |
-| `#009` | **Singularity Seed** | Core Artifact | `Mythic` | `0.095` | 100 | 17 | 100 |
-| `#010` | **Phantom Drive** | Mobility Artifact | `Epic` | `0.025` | 89 | 48 | 76 |
-| `#011` | **Solar Heart** | Energy Core | `Legendary` | `0.043` | 96 | 83 | 65 |
-| `#012` | **Obsidian Protocol** | Lattice Authority | `Mythic` | `0.085` | 93 | 95 | 100 |
 
 ---
 

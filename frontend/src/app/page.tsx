@@ -52,8 +52,13 @@ export default function Home() {
         const savedListed = localStorage.getItem('mythic_listed_cards');
         if (savedListed) setListedCards(JSON.parse(savedListed));
 
-        const savedTab = localStorage.getItem('mythic_active_tab') as TabType;
-        if (savedTab) setActiveTab(savedTab);
+        const hash = window.location.hash.replace('#', '').toUpperCase() as TabType;
+        if (hash === 'FORGE' || hash === 'MARKET' || hash === 'HISTORY' || hash === 'MY CARDS') {
+          setActiveTab(hash);
+        } else {
+          const savedTab = localStorage.getItem('mythic_active_tab') as TabType;
+          if (savedTab) setActiveTab(savedTab);
+        }
       } catch (e) {}
     }
   }, []);
