@@ -1,7 +1,7 @@
 # ⚔️ FOUNDATION ORACLE: THE LOST SIGNAL
 ### *Decentralized Web3 NFT Marketplace, Relic Forge & On-Chain Provenance Explorer*
 
-[![Live Demo](https://img.shields.io/badge/Live%20dApp-Vercel%20Production-success?style=for-the-badge&logo=vercel)](https://frontend-beta-wine-27.vercel.app)
+[![Live Demo](https://img.shields.io/badge/Live%20dApp-Vercel%20Production-success?style=for-the-badge&logo=vercel)](https://foundation-oracle.vercel.app)
 [![Solidity](https://img.shields.io/badge/Solidity-^0.8.24-363636?style=for-the-badge&logo=solidity)](https://soliditylang.org/)
 [![OpenZeppelin](https://img.shields.io/badge/OpenZeppelin-Contracts%20v5.0-4E5EE4?style=for-the-badge&logo=openzeppelin)](https://www.openzeppelin.com/contracts)
 [![Next.js](https://img.shields.io/badge/Next.js-14.2%20(App%20Router)-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
@@ -15,8 +15,8 @@
 | Resource | Direct Link |
 | :--- | :--- |
 | **GitHub Repository** | [https://github.com/Joshan2007/foundation-oracle](https://github.com/Joshan2007/foundation-oracle) |
-| **Production dApp (Vercel)** | [https://frontend-beta-wine-27.vercel.app](https://frontend-beta-wine-27.vercel.app) |
-| **Alternate Mirror (Vercel)** | [https://frontend-gwtpnz7an-joshanas2007-1936s-projects.vercel.app](https://frontend-gwtpnz7an-joshanas2007-1936s-projects.vercel.app) |
+| **Production dApp (Vercel)** | [https://foundation-oracle.vercel.app](https://foundation-oracle.vercel.app) |
+| **Vercel Dashboard** | [https://vercel.com/joshanas2007-1936s-projects/foundation-oracle](https://vercel.com/joshanas2007-1936s-projects/foundation-oracle) |
 | **Target Testnet** | Ethereum Sepolia (Chain ID: `11155111`) / Localhost (Chain ID: `31337`) |
 | **ERC-721 Contract (`MRC`)** | [`0x5FbDB2315678afecb367f032d93F642f64180aa3`](file:///c:/Users/Joshan/OneDrive/Documents/gdg_blockchain/contracts/GameCardNFT.sol) |
 | **Marketplace Contract** | [`0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512`](file:///c:/Users/Joshan/OneDrive/Documents/gdg_blockchain/contracts/GameCardMarketplace.sol) |
