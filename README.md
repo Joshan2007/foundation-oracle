@@ -44,7 +44,7 @@ The platform is designed around a dark fantasy sci-fi universe where players tra
 ### Key Highlights
 - **100% Non-Custodial Trading**: Sellers maintain custody of their NFTs until the moment an atomic swap is executed on-chain.
 - **Reentrancy Safe**: Every contract function follows the Checks-Effects-Interactions (CEI) pattern with OpenZeppelin's `ReentrancyGuard`.
-- **Zero-Latency Audio Engine**: Custom Web Audio API procedural sound synthesizer delivering haptic audio feedback without downloading external audio files.
+- **Cybernetic Kinetic UI**: Real-time decrypted text reveals, floating glassmorphic navigation, live telemetry counters, and an interactive WebGL cosmic void particle field.
 - **Dynamic Relic Forge**: Interactive NFT minting studio allowing users to design cards with live visual feedback, automatic IPFS metadata pinning, and on-chain ERC-721 minting.
 - **Real-Time Provenance Tracking**: Live on-chain event watcher querying smart contract logs for purchases, listings, cancellations, and mints.
 
@@ -56,7 +56,7 @@ The platform is designed around a dark fantasy sci-fi universe where players tra
 - **Live On-Chain Listings**: Automatically queries `GameCardMarketplace.sol` for active listings and resolves token metadata via IPFS.
 - **Atomic Purchases**: Instant `buyItem` execution where ETH payment is routed directly to the seller while the ERC-721 token is transferred to the buyer in a single transaction.
 - **Multi-Factor Filtering**: Filter by rarity (*Mythic*, *Legendary*, *Epic*, *Rare*, *Common*) and artifact type (*Fragment*, *Access Relic*, *Neural Relic*, *Temporal Artifact*, *Core Artifact*, etc.).
-- **Sort & Search**: Instant client-side search by title or description, and sorting by Price (Low to High, High to Low) or Token ID.
+- **Sort & Filter Controls**: Filter by rarity tiers, card archetypes, and sort dynamically by Price (Low to High, High to Low), Recent Listings, or Rarity Tier.
 - **Interactive Card Inspector**: Click any card to inspect full-screen high-resolution art, stat distributions, seller address, and contract status.
 
 ### 2. ⚒️ Relic Forge Studio (`CardForge.tsx`)
@@ -71,6 +71,8 @@ The platform is designed around a dark fantasy sci-fi universe where players tra
 - **Single-Transaction Approval & Listing**: Automatically checks if the marketplace contract has approval (`isApprovedForAll` or `getApproved`) and prompts the user for ERC-721 approval before executing `listItem`.
 
 ### 4. 📜 Provenance & Activity Explorer (`HistoryLog.tsx`)
+- **Comprehensive Activity Ledger**: Real-time provenance tracking for forged relics, marketplace purchases, sales, and listings.
+- **Contextual Provenance Badges**: Distinct visual indicators for user actions (FORGED, BOUGHT, SOLD, LISTED) alongside relic titles, relative timestamps, and ETH transaction prices.
 - **Smart Contract Event Listener**: Subscribes to and queries historical Ethereum logs:
   - `CardListed(address indexed nftAddress, uint256 indexed tokenId, address seller, uint256 price)`
   - `CardSold(address indexed nftAddress, uint256 indexed tokenId, address seller, address buyer, uint256 price)`
@@ -79,10 +81,10 @@ The platform is designed around a dark fantasy sci-fi universe where players tra
 - **Event Filter Tabs**: Instant filtering between All Events, Listed, Sold, Delisted, and Minted.
 - **Block Explorer Verification**: Displays block numbers, seller and buyer checksum addresses, transaction hashes, and exact ETH prices.
 
-### 5. 🔊 Procedural Audio & Kinetic UI
-- **Zero-Asset Web Audio API**: Procedurally synthesizes subtle mechanical clicks, low-frequency cosmic rumbles, and resonance hums natively in the browser.
-- **Kinetic Typography & Decrypted Text**: Scrambled letter reveal animations inspired by high-end Web3 interfaces (Igloo.inc, Cyberpunk terminals).
-- **Cosmic Void Background**: Lightweight canvas particle field rendering starry depth without slowing down frame rates.
+### 5. 🌌 Futuristic Minimalist UI & Kinetic Typography
+- **Kinetic Typography & Decrypted Text**: Real-time scrambled letter reveal animations inspired by cybernetic terminals (`DecryptedText.tsx` & `KineticText.tsx`).
+- **Obsidian Minimalist Aesthetics**: Refined monochrome typography, floating glassmorphic header navigation, clean telemetry badges (`[ 01 // RARITY FILTER ]`, `[ 04 // LIVE TELEMETRY ]`), and dark obsidian panels.
+- **Cosmic Void Background**: Lightweight WebGL canvas particle field rendering starry interstellar depth with zero impact on frame rates.
 
 ---
 
@@ -101,9 +103,9 @@ The platform is designed around a dark fantasy sci-fi universe where players tra
 ### Frontend Application
 - **Next.js `14.2` (App Router)**: Hybrid server/client component architecture, statically prerendered routes, and serverless API endpoints.
 - **React `18` & TypeScript**: Component-driven UI with strict type safety.
-- **Tailwind CSS**: Utility-first CSS configured with custom obsidian color palettes, rarity glow drop-shadows, and runic border styles.
+- **Tailwind CSS**: Utility-first CSS configured with custom obsidian color palettes, rarity glow drop-shadows, and glassmorphic floating panels.
 - **Lucide React**: Clean vector icon suite for Web3 trading actions.
-- **Web Audio API**: Browser-native sound synthesis.
+- **WebGL / HTML5 Canvas**: Real-time starry void particle engine.
 
 ### Decentralized Storage & Infrastructure
 - **IPFS (InterPlanetary File System)**: Immutable distributed storage for card metadata and artifact assets.
@@ -119,7 +121,6 @@ flowchart TD
     subgraph ClientApp ["Next.js Web Application - foundation-oracle.vercel.app"]
         Wallet["MetaMask Wallet Connector<br/>EIP-1193 Signer / Provider"]
         Cosmic["Cosmic Void Visualizer<br/>WebGL Canvas Particle Field"]
-        Audio["Web Audio Synthesizer<br/>Procedural Zero-Latency Audio"]
         MarketUI["Marketplace Grid and Filters<br/>Non-Custodial Trading"]
         ForgeUI["Relic Creator Studio<br/>Interactive Card Forge"]
         HistoryUI["Provenance Explorer<br/>On-Chain Event Activity Log"]
@@ -143,7 +144,6 @@ flowchart TD
     ClientApp --> ForgeUI
     ClientApp --> HistoryUI
     ClientApp -.-> Cosmic
-    ClientApp -.-> Audio
 
     ForgeUI -->|1. Submit Custom Relic Data| PinAPI
     PinAPI -->|2. Generate ERC-721 Schema and CID| IPFSCID
@@ -375,17 +375,20 @@ gdg_blockchain/
 │   │   ├── app/                   # App Router pages and API routes
 │   │   │   ├── api/ipfs/pin/      # Serverless IPFS metadata pinning route
 │   │   │   ├── globals.css        # Obsidian dark fantasy styling and rarity classes
-│   │   │   ├── layout.tsx         # Root layout with Web Audio context
+│   │   │   ├── layout.tsx         # Root layout with dark obsidian theme
 │   │   │   └── page.tsx           # Main application view container
 │   │   ├── components/            # React Web3 UI components
-│   │   │   ├── AudioEngine.tsx    # Procedural Web Audio API sound generator
 │   │   │   ├── CardForge.tsx      # Relic Creator Studio (NFT Minting)
 │   │   │   ├── CollectionGrid.tsx # User inventory and "List for Sale" modal
-│   │   │   ├── CosmicVoid.tsx     # Canvas particle background
+│   │   │   ├── CosmicVoid.tsx     # WebGL canvas particle background
+│   │   │   ├── DecryptedText.tsx  # Cybernetic kinetic text reveal animation
 │   │   │   ├── Header.tsx         # Navigation bar & MetaMask wallet connect
 │   │   │   ├── HistoryLog.tsx     # On-chain event activity provenance explorer
+│   │   │   ├── KineticText.tsx    # Staggered typography animation
 │   │   │   ├── MarketplaceGrid.tsx# Relic trading grid & instant BUY modal
 │   │   │   └── Sidebar.tsx        # Rarity and archetype filter controls
+│   │   ├── utils/
+│   │   │   └── history.ts         # Activity persistence and provenance helpers
 │   │   └── config/
 │   │       └── contracts.json     # Auto-synced contract addresses and ABIs
 │   ├── tailwind.config.ts         # Obsidian palette and glowing box shadows
