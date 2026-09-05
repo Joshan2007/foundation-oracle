@@ -116,29 +116,29 @@ The platform is designed around a dark fantasy sci-fi universe where players tra
 
 ```mermaid
 flowchart TD
-    subgraph ClientApp ["Next.js Web Application (foundation-oracle.vercel.app)"]
-        Wallet["MetaMask Wallet Connector<br/>(EIP-1193 Signer / Provider)"]
-        Cosmic["Cosmic Void Visualizer<br/>(WebGL Canvas Particle Field)"]
-        Audio["Web Audio Synthesizer<br/>(Procedural Zero-Latency Audio)"]
-        MarketUI["Marketplace Grid & Filters<br/>(Non-Custodial Trading)"]
-        ForgeUI["Relic Creator Studio<br/>(Interactive Card Forge)"]
-        HistoryUI["Provenance Explorer<br/>(On-Chain Event Activity Log)"]
+    subgraph ClientApp ["Next.js Web Application - foundation-oracle.vercel.app"]
+        Wallet["MetaMask Wallet Connector<br/>EIP-1193 Signer / Provider"]
+        Cosmic["Cosmic Void Visualizer<br/>WebGL Canvas Particle Field"]
+        Audio["Web Audio Synthesizer<br/>Procedural Zero-Latency Audio"]
+        MarketUI["Marketplace Grid and Filters<br/>Non-Custodial Trading"]
+        ForgeUI["Relic Creator Studio<br/>Interactive Card Forge"]
+        HistoryUI["Provenance Explorer<br/>On-Chain Event Activity Log"]
     end
 
-    subgraph StorageLayer ["Decentralized Storage & Metadata Layer"]
-        PinAPI["Next.js Serverless Route<br/>(/api/ipfs/pin)"]
-        IPFSCID["IPFS Deterministic CID Generator<br/>(ERC-721 Metadata Standard)"]
-        Pinata["Pinata Cloud IPFS Gateway<br/>(Metadata & Image Resolution)"]
+    subgraph StorageLayer ["Decentralized Storage and Metadata Layer"]
+        PinAPI["Next.js Serverless Route<br/>/api/ipfs/pin"]
+        IPFSCID["IPFS Deterministic CID Generator<br/>ERC-721 Metadata Standard"]
+        Pinata["Pinata Cloud IPFS Gateway<br/>Metadata and Image Resolution"]
     end
 
     subgraph BlockchainLayer ["Ethereum Sepolia Testnet / Local EVM"]
-        NFTContract["GameCardNFT.sol (ERC-721 MRC)<br/>0x5FbDB2315678afecb367f032d93F642f64180aa3"]
-        MarketContract["GameCardMarketplace.sol (ReentrancyGuard)<br/>0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"]
-        Explorer["Sepolia Etherscan Block Explorer<br/>(Verified On-Chain Logs)"]
+        NFTContract["GameCardNFT.sol - ERC-721 MRC<br/>0x5FbDB2315678afecb367f032d93F642f64180aa3"]
+        MarketContract["GameCardMarketplace.sol - ReentrancyGuard<br/>0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"]
+        Explorer["Sepolia Etherscan Block Explorer<br/>Verified On-Chain Logs"]
     end
 
     %% Workflow Connections
-    Wallet -->|Connect & Sign Transactions| ClientApp
+    Wallet -->|Connect and Sign Transactions| ClientApp
     ClientApp --> MarketUI
     ClientApp --> ForgeUI
     ClientApp --> HistoryUI
@@ -146,19 +146,19 @@ flowchart TD
     ClientApp -.-> Audio
 
     ForgeUI -->|1. Submit Custom Relic Data| PinAPI
-    PinAPI -->|2. Generate ERC-721 Schema & CID| IPFSCID
-    IPFSCID -->|3. Return ipfs://Qm... URI| ForgeUI
-    ForgeUI -->|4. Client-Side Minting: mintCard(recipient, tokenURI)| NFTContract
+    PinAPI -->|2. Generate ERC-721 Schema and CID| IPFSCID
+    IPFSCID -->|3. Return IPFS Token URI| ForgeUI
+    ForgeUI -->|4. Client-Side Minting via mintCard| NFTContract
 
-    MarketUI -->|ERC-721 Approval & listItem(nft, id, price)| MarketContract
-    MarketUI -->|Atomic buyItem(nft, id) with ETH Payment| MarketContract
+    MarketUI -->|ERC-721 Approval and listItem| MarketContract
+    MarketUI -->|Atomic buyItem with ETH Payment| MarketContract
     MarketContract -->|Transfer NFT Ownership to Buyer| NFTContract
     MarketContract -->|Direct ETH Payout to Seller| Wallet
 
-    NFTContract -.->|Emit CardMinted| Explorer
-    MarketContract -.->|Emit CardListed, CardSold, CardDelisted| Explorer
+    NFTContract -.->|Emit CardMinted Event| Explorer
+    MarketContract -.->|Emit CardListed, Sold, Delisted Events| Explorer
     Explorer -->|JSON-RPC queryFilter| HistoryUI
-    Pinata -.->|Resolve TokenURI & Artwork| MarketUI
+    Pinata -.->|Resolve TokenURI and Artwork| MarketUI
 ```
 
 ---
