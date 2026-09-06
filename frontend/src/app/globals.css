@@ -126,8 +126,8 @@ h1, h2, h3, h4 {
 
 /* Stats */
 .stat-energy { background: transparent; border: none; color: #FFFFFF; }
-.stat-stability { background: transparent; border: none; color: #D4D4D4; }
-.stat-signal { background: transparent; border: none; color: #A3A3A3; }
+.stat-stability { background: transparent; border: none; color: #FFFFFF; }
+.stat-signal { background: transparent; border: none; color: #FFFFFF; }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar { width: 4px; height: 4px; }
