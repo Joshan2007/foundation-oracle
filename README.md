@@ -30,6 +30,11 @@
 
 ![Foundation Oracle Relic Forge Studio](docs/screenshots/relic_forge_studio.png)
 
+### 2. Personal Reliquary & Inventory Vault
+*High-resolution view of the user's card reliquary displaying owned ERC-721 tokens, live matrix stats, transparent glassmorphic UI, and direct one-click listing controls.*
+
+![Foundation Oracle Card Reliquary](docs/screenshots/card_reliquary.png)
+
 ---
 
 ## 📖 Project Overview
@@ -371,7 +376,8 @@ gdg_blockchain/
 │   └── sepolia.json               # Contract addresses and ABIs for Sepolia/Localhost
 ├── docs/                          # Documentation assets
 │   └── screenshots/               # High-resolution dApp interface screenshots
-│       └── relic_forge_studio.png
+│       ├── relic_forge_studio.png
+│       └── card_reliquary.png
 ├── frontend/                      # Next.js 14 web application
 │   ├── src/
 │   │   ├── app/                   # App Router pages and API routes
