@@ -108,10 +108,10 @@ function ParticleField({ count = 2500 }) {
         />
       </bufferGeometry>
       <pointsMaterial
-        size={0.035}
+        size={0.05}
         color="#FFFFFF"
         transparent
-        opacity={0.7}
+        opacity={0.8}
         blending={THREE.AdditiveBlending}
         depthWrite={false}
         sizeAttenuation

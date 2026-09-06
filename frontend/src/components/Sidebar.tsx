@@ -65,8 +65,8 @@ export default function Sidebar({
                 onMouseEnter={playHover}
                 className={`py-2 px-3 rounded-xl text-[10px] font-mono font-bold tracking-widest border transition-all text-center ${
                   isSelected
-                    ? `bg-obsidian-700/80 ${item.color} shadow-lg ring-1 ring-accent-cyan/50`
-                    : `bg-obsidian-900/60 ${item.color} opacity-70 hover:opacity-100`
+                    ? `bg-white/[0.1] ${item.color} shadow-lg ring-1 ring-accent-cyan/50 backdrop-blur-sm`
+                    : `bg-white/[0.03] ${item.color} opacity-70 hover:opacity-100 hover:bg-white/[0.06]`
                 }`}
               >
                 {item.label}
@@ -86,10 +86,10 @@ export default function Sidebar({
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value as CardCategoryType)}
           onMouseEnter={playHover}
-          className="w-full bg-obsidian-900 border border-slate-700 text-slate-200 text-xs font-mono rounded-xl px-3 py-2.5 focus:outline-none focus:border-accent-cyan transition-colors cursor-pointer mt-2"
+          className="w-full bg-white/[0.03] backdrop-blur-sm border border-white/[0.08] text-slate-200 text-xs font-mono rounded-xl px-3 py-2.5 focus:outline-none focus:border-accent-cyan transition-colors cursor-pointer mt-2"
         >
           {categories.map((cat) => (
-            <option key={cat} value={cat} className="bg-obsidian-900 text-slate-200">
+            <option key={cat} value={cat} className="bg-obsidian-950 text-slate-200">
               {cat === 'ALL' ? 'All Card Types' : cat}
             </option>
           ))}
@@ -106,12 +106,12 @@ export default function Sidebar({
           value={selectedSort}
           onChange={(e) => setSelectedSort(e.target.value as SortOptionType)}
           onMouseEnter={playHover}
-          className="w-full bg-obsidian-900 border border-slate-700 text-slate-200 text-xs font-mono rounded-xl px-3 py-2.5 focus:outline-none focus:border-accent-cyan transition-colors cursor-pointer mt-2"
+          className="w-full bg-white/[0.03] backdrop-blur-sm border border-white/[0.08] text-slate-200 text-xs font-mono rounded-xl px-3 py-2.5 focus:outline-none focus:border-accent-cyan transition-colors cursor-pointer mt-2"
         >
-          <option value="PRICE_ASC" className="bg-obsidian-900">Price: Low to High</option>
-          <option value="PRICE_DESC" className="bg-obsidian-900">Price: High to Low</option>
-          <option value="RECENT" className="bg-obsidian-900">Recently Listed</option>
-          <option value="RARITY" className="bg-obsidian-900">Rarity Tier</option>
+          <option value="PRICE_ASC" className="bg-obsidian-950">Price: Low to High</option>
+          <option value="PRICE_DESC" className="bg-obsidian-950">Price: High to Low</option>
+          <option value="RECENT" className="bg-obsidian-950">Recently Listed</option>
+          <option value="RARITY" className="bg-obsidian-950">Rarity Tier</option>
         </select>
       </div>
 

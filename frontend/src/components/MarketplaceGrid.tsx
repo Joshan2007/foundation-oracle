@@ -323,7 +323,7 @@ export default function MarketplaceGrid({
           {filteredCards.map((card) => (
             <div
               key={card.listingId}
-              className={`group relative rounded-2xl overflow-hidden bg-obsidian-950/90 border-2 transition-all duration-300 hover:z-10 cursor-pointer ${getRarityBorderClass(
+              className={`group relative rounded-2xl overflow-hidden bg-obsidian-950/35 backdrop-blur-sm border-2 transition-all duration-300 hover:z-10 cursor-pointer shadow-lg hover:shadow-2xl ${getRarityBorderClass(
                 card.rarity
               )}`}
               style={{ transformStyle: 'preserve-3d' }}
@@ -348,7 +348,7 @@ export default function MarketplaceGrid({
               }}
             >
               {/* Card Header & Rarity Badge */}
-              <div className="relative h-64 overflow-hidden bg-obsidian-900">
+              <div className="relative h-64 overflow-hidden bg-obsidian-950/50">
                 <img
                   src={card.image}
                   alt={card.name}

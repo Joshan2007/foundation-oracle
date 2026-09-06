@@ -359,7 +359,7 @@ export default function CardForge({ walletAddress, onCardMinted, onTransactionCo
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full bg-obsidian-900 border border-slate-800 text-slate-100 text-sm font-mono rounded-xl px-4 py-3.5 focus:outline-none focus:border-accent-cyan transition-colors"
+                className="w-full bg-white/[0.03] backdrop-blur-sm border border-white/[0.08] text-slate-100 text-sm font-mono rounded-xl px-4 py-3.5 focus:outline-none focus:border-accent-cyan transition-colors"
                 placeholder="e.g. AETHERIS THE AWAKENED"
               />
             </div>
@@ -371,7 +371,7 @@ export default function CardForge({ walletAddress, onCardMinted, onTransactionCo
                 required
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full bg-obsidian-900 border border-slate-800 text-slate-100 text-sm font-mono rounded-xl px-4 py-3.5 focus:outline-none focus:border-accent-cyan transition-colors"
+                className="w-full bg-white/[0.03] backdrop-blur-sm border border-white/[0.08] text-slate-100 text-sm font-mono rounded-xl px-4 py-3.5 focus:outline-none focus:border-accent-cyan transition-colors"
                 placeholder="Enter cryptographic lore or attributes..."
               />
             </div>
@@ -520,13 +520,13 @@ export default function CardForge({ walletAddress, onCardMinted, onTransactionCo
                 <select
                   value={rarity}
                   onChange={(e) => setRarity(e.target.value as any)}
-                  className="w-full bg-obsidian-900 border border-slate-800 text-slate-100 text-sm font-mono rounded-xl px-4 py-3.5 focus:outline-none focus:border-accent-cyan transition-colors cursor-pointer"
+                  className="w-full bg-white/[0.03] backdrop-blur-sm border border-white/[0.08] text-slate-100 text-sm font-mono rounded-xl px-4 py-3.5 focus:outline-none focus:border-accent-cyan transition-colors cursor-pointer"
                 >
-                  <option value="Mythic">Mythic</option>
-                  <option value="Legendary">Legendary</option>
-                  <option value="Epic">Epic</option>
-                  <option value="Rare">Rare</option>
-                  <option value="Common">Common</option>
+                  <option value="Mythic" className="bg-obsidian-950">Mythic</option>
+                  <option value="Legendary" className="bg-obsidian-950">Legendary</option>
+                  <option value="Epic" className="bg-obsidian-950">Epic</option>
+                  <option value="Rare" className="bg-obsidian-950">Rare</option>
+                  <option value="Common" className="bg-obsidian-950">Common</option>
                 </select>
               </div>
 
@@ -535,7 +535,7 @@ export default function CardForge({ walletAddress, onCardMinted, onTransactionCo
                 <select
                   value={type}
                   onChange={(e) => setType(e.target.value)}
-                  className="w-full bg-obsidian-900 border border-slate-800 text-slate-100 text-sm font-mono rounded-xl px-4 py-3.5 focus:outline-none focus:border-accent-cyan transition-colors cursor-pointer"
+                  className="w-full bg-white/[0.03] backdrop-blur-sm border border-white/[0.08] text-slate-100 text-sm font-mono rounded-xl px-4 py-3.5 focus:outline-none focus:border-accent-cyan transition-colors cursor-pointer"
                 >
                   <option value="SENTINEL">SENTINEL</option>
                   <option value="RELIC">RELIC</option>
@@ -630,9 +630,9 @@ export default function CardForge({ walletAddress, onCardMinted, onTransactionCo
             [ LIVE FORGE PREVIEW ]
           </h3>
 
-          <div className={`relative rounded-2xl overflow-hidden bg-obsidian-900 border-2 transition-all duration-500 ${getRarityBorderClass(rarity)} shadow-2xl`}>
+          <div className={`relative rounded-2xl overflow-hidden bg-obsidian-950/30 backdrop-blur-sm border-2 transition-all duration-500 ${getRarityBorderClass(rarity)} shadow-2xl`}>
             {/* Asset Header */}
-            <div className="relative h-72 overflow-hidden bg-obsidian-950 flex items-center justify-center border-b border-slate-800">
+            <div className="relative h-72 overflow-hidden bg-obsidian-950/50 flex items-center justify-center border-b border-white/[0.08]">
               {image ? (
                 <img src={image} alt="Preview" className="w-full h-full object-cover" />
               ) : (

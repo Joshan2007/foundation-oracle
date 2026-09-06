@@ -285,7 +285,7 @@ export default function Header({
 
   return (
     <header className="sticky top-3 sm:top-4 z-50 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full transition-all duration-300">
-      <div className="bg-obsidian-950/75 backdrop-blur-xl border border-white/[0.08] border-t-white/[0.18] rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.1)] px-4 sm:px-6">
+      <div className="bg-obsidian-950/30 backdrop-blur-md border border-white/[0.1] border-t-white/[0.2] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.1)] px-4 sm:px-6">
         <div className="flex items-center justify-between h-20">
           
           {/* Logo & Title */}
@@ -294,7 +294,7 @@ export default function Header({
             onClick={() => handleTabChange('MARKET')}
             onMouseEnter={playHover}
           >
-            <div className="relative p-2.5 rounded-xl bg-obsidian-850 border border-slate-700 group-hover:border-accent-cyan transition-all">
+            <div className="relative p-2.5 rounded-xl bg-white/[0.04] backdrop-blur-sm border border-white/[0.08] group-hover:border-accent-cyan transition-all">
               <Compass className="w-8 h-8 text-slate-100 group-hover:text-accent-cyan group-hover:rotate-45 transition-transform duration-500" />
             </div>
             <div>
@@ -308,7 +308,7 @@ export default function Header({
           </div>
 
           {/* Navigation Tabs */}
-          <nav className="hidden md:flex items-center space-x-1 bg-obsidian-900 p-1.5 rounded-lg border border-slate-800">
+          <nav className="hidden md:flex items-center space-x-1 bg-white/[0.03] backdrop-blur-sm p-1.5 rounded-lg border border-white/[0.08]">
             {navTabs.map((tab) => {
               const isActive = activeTab === tab;
               return (
@@ -319,7 +319,7 @@ export default function Header({
                   className={`px-4 py-2 text-xs font-mono tracking-widest font-semibold rounded-md transition-all duration-300 ${
                     isActive
                       ? 'bg-slate-100 text-obsidian-950 shadow-sm'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-obsidian-800'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.06]'
                   }`}
                 >
                   {tab}
@@ -331,7 +331,7 @@ export default function Header({
           {/* Right Section: Wallet Connect */}
           <div className="flex items-center space-x-3">
             {walletAddress ? (
-              <div className="flex items-center space-x-2 bg-obsidian-900 border border-slate-800 rounded-xl p-1.5 pr-3 shadow-lg">
+              <div className="flex items-center space-x-2 bg-white/[0.04] backdrop-blur-sm border border-white/[0.08] rounded-xl p-1.5 pr-3 shadow-lg">
                 <div className="bg-accent-cyan/10 border border-accent-cyan/30 text-accent-cyan px-2 py-1 rounded-lg text-xs font-mono flex items-center space-x-1">
                   <ShieldCheck className="w-3.5 h-3.5" />
                   <span>{walletBalance} ETH</span>
@@ -398,7 +398,7 @@ export default function Header({
         </div>
 
         {/* Mobile Navigation Tabs */}
-        <div className="md:hidden flex overflow-x-auto space-x-2 py-3 border-t border-slate-800 scrollbar-none">
+        <div className="md:hidden flex overflow-x-auto space-x-2 py-3 border-t border-white/[0.08] scrollbar-none">
           {navTabs.map((tab) => (
             <button
               key={tab}
@@ -406,7 +406,7 @@ export default function Header({
               className={`px-4 py-2 text-[10px] font-mono whitespace-nowrap rounded-lg tracking-widest ${
                 activeTab === tab
                   ? 'bg-slate-100 text-obsidian-950 font-bold'
-                  : 'text-slate-400 bg-obsidian-900'
+                  : 'text-slate-400 bg-white/[0.04]'
               }`}
             >
               {tab}

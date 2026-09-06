@@ -277,7 +277,7 @@ export default function CollectionGrid({
           {allOwnedCards.map((card) => (
             <div
               key={card.tokenId}
-              className={`group relative rounded-2xl overflow-hidden bg-obsidian-950/90 border-2 transition-all duration-300 hover:z-10 ${getRarityBorderClass(
+              className={`group relative rounded-2xl overflow-hidden bg-obsidian-950/35 backdrop-blur-sm border-2 transition-all duration-300 hover:z-10 shadow-lg hover:shadow-2xl ${getRarityBorderClass(
                 card.rarity
               )}`}
               style={{ transformStyle: 'preserve-3d' }}
@@ -300,7 +300,7 @@ export default function CollectionGrid({
                 el.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px) scale3d(1, 1, 1)';
               }}
             >
-              <div className="relative h-64 overflow-hidden bg-obsidian-900">
+              <div className="relative h-64 overflow-hidden bg-obsidian-950/50">
                 <img src={card.image} alt={card.name} className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-obsidian-950 via-transparent to-transparent" />
                 <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
