@@ -25,10 +25,10 @@
 
 ## 📸 Screenshots & Visual Interface
 
-### 1. Main Marketplace & Telemetry Interface
-*High-resolution view of the FOUNDATION ORACLE interface featuring live telemetry stats, rarity filters, cybernetic typography, and non-custodial trading controls.*
+### 1. Relic Creator Studio & Hologram Forge
+*High-resolution view of the FOUNDATION ORACLE Relic Creator Studio featuring local device artwork upload, real-time metadata synthesis, kinetic cybernetic telemetry, and live interactive hologram card preview.*
 
-![Foundation Oracle Marketplace](docs/screenshots/marketplace_overview.png)
+![Foundation Oracle Relic Forge Studio](docs/screenshots/relic_forge_studio.png)
 
 ---
 
@@ -60,12 +60,9 @@ The platform is designed around a dark fantasy sci-fi universe where players tra
 - **Interactive Card Inspector**: Click any card to inspect full-screen high-resolution art, stat distributions, seller address, and contract status.
 
 ### 2. ⚒️ Relic Forge Studio (`CardForge.tsx`)
-- **Zero-Friction Artwork Integration**: Multiple flexible artwork sources without requiring external public image hosting:
-  - **Local Device Upload**: Drag-and-drop or browse any local image file (PNG, JPG, JPEG, WEBP, GIF) with automated client-side canvas compression for seamless on-chain storage.
-  - **Preset Relic Gallery**: 12 curated high-resolution sci-fi and dark fantasy artworks across Sentinels, Relics, Spells, and Artifacts.
-  - **Autonomous Matrix Hologram Generator**: Real-time generative canvas synthesizing customized geometric rune lattices based on relic name, rarity, and archetype.
-  - **Instant Clipboard Paste**: Press `Ctrl+V` or click "Paste Clipboard" to directly import screenshots and copied images.
-  - **Web URL**: Fallback option for users with direct external links.
+- **Zero-Friction Artwork Integration**: Native artwork loading without requiring external public image hosting:
+  - **Local Device Upload**: Drag-and-drop or browse any local image file from your machine (PNG, JPG, JPEG, WEBP, GIF) with automated client-side canvas compression for rapid IPFS pinning and seamless on-chain storage.
+  - **Instant Clipboard Paste**: Press `Ctrl+V` or click "Paste Clipboard" to directly import screenshots and copied images directly into the forge.
 - **Live Card Hologram Preview**: Real-time rendering of the card's visual frame, dynamic rarity glowing borders, asset source indicators, and stat bars as the user tweaks parameters.
 - **Automated IPFS Pinning**: Submits card parameters to `/api/ipfs/pin`, which formats standard ERC-721 metadata and generates a deterministic IPFS Content Identifier (CID).
 - **One-Click On-Chain Minting**: Direct wallet integration calling `GameCardNFT.mintCard(recipient, tokenURI)`.
@@ -374,7 +371,7 @@ gdg_blockchain/
 │   └── sepolia.json               # Contract addresses and ABIs for Sepolia/Localhost
 ├── docs/                          # Documentation assets
 │   └── screenshots/               # High-resolution dApp interface screenshots
-│       └── marketplace_overview.jpg
+│       └── relic_forge_studio.png
 ├── frontend/                      # Next.js 14 web application
 │   ├── src/
 │   │   ├── app/                   # App Router pages and API routes
