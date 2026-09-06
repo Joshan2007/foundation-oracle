@@ -1,7 +1,21 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Hammer, Sparkles, Zap, Shield, Radio, CheckCircle2, Link as LinkIcon, Image as ImageIcon } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import {
+  Hammer,
+  Sparkles,
+  Zap,
+  Shield,
+  Radio,
+  CheckCircle2,
+  Link as LinkIcon,
+  Image as ImageIcon,
+  Upload,
+  Clipboard,
+  RefreshCw,
+  X,
+  Layers,
+} from 'lucide-react';
 import { ethers } from 'ethers';
 import { CardItem } from './MarketplaceGrid';
 import contractsConfig from '../config/contracts.json';
@@ -16,18 +30,211 @@ interface CardForgeProps {
   onTransactionComplete?: () => void;
 }
 
-const PRESET_ARTWORKS = [
-  'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80',
-  'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80',
-  'https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=800&q=80',
-  'https://images.unsplash.com/photo-1618331835717-801e976710b2?auto=format&fit=crop&w=800&q=80',
-  'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=800&q=80',
+export interface PresetArtwork {
+  id: string;
+  name: string;
+  category: string;
+  url: string;
+}
+
+const PRESET_ARTWORKS: PresetArtwork[] = [
+  {
+    id: 'void-core',
+    name: 'Aetheris Void Core',
+    category: 'SENTINEL',
+    url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 'runic-matrix',
+    name: 'Celestial Runic Matrix',
+    category: 'RELIC',
+    url: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 'cyber-sentinel',
+    name: 'Obsidian Cyber Sentinel',
+    category: 'SENTINEL',
+    url: 'https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 'quantum-fragment',
+    name: 'Quantum Warp Fragment',
+    category: 'ARTIFACT',
+    url: 'https://images.unsplash.com/photo-1618331835717-801e976710b2?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 'plasma-nexus',
+    name: 'Neon Plasma Nexus',
+    category: 'SPELL',
+    url: 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 'chrono-prism',
+    name: 'Chrono-Temporal Prism',
+    category: 'ARTIFACT',
+    url: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 'supernova-flare',
+    name: 'Stellar Supernova Core',
+    category: 'SPELL',
+    url: 'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 'singularity',
+    name: 'Null-Zone Singularity',
+    category: 'RELIC',
+    url: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 'biomech-relic',
+    name: 'Bio-Mechanical Lattice',
+    category: 'CREATURE',
+    url: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 'hyper-lattice',
+    name: 'Hyper-Dimensional Aegis',
+    category: 'WEAPON',
+    url: 'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 'neural-conduit',
+    name: 'Neural Synapse Conduit',
+    category: 'RELIC',
+    url: 'https://images.unsplash.com/photo-1507499739999-097706ad8914?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 'monolith-core',
+    name: 'Dark Matter Monolith',
+    category: 'SENTINEL',
+    url: 'https://images.unsplash.com/photo-1633493106115-6187515c1328?auto=format&fit=crop&w=800&q=80',
+  },
 ];
+
+// High-speed client-side image compression: converts device files into crisp, lightweight Data URLs
+const compressAndLoadImage = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    if (!file.type.startsWith('image/')) {
+      reject(new Error('Please select an image file (PNG, JPG, JPEG, WEBP, GIF)'));
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (readerEvent) => {
+      const img = new Image();
+      img.onload = () => {
+        const MAX_DIM = 800;
+        let { width, height } = img;
+        if (width > height && width > MAX_DIM) {
+          height = Math.round((height * MAX_DIM) / width);
+          width = MAX_DIM;
+        } else if (height > MAX_DIM) {
+          width = Math.round((width * MAX_DIM) / height);
+          height = MAX_DIM;
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          resolve(readerEvent.target?.result as string);
+          return;
+        }
+        ctx.drawImage(img, 0, 0, width, height);
+        // Ultra-clean JPEG under 60KB
+        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+        resolve(compressedDataUrl);
+      };
+      img.onerror = () => {
+        resolve(readerEvent.target?.result as string);
+      };
+      img.src = readerEvent.target?.result as string;
+    };
+    reader.onerror = (err) => reject(err);
+    reader.readAsDataURL(file);
+  });
+};
+
+// Generates procedural cybernetic relic holographic art if user has no files or links
+const generateProceduralArt = (cardName: string, cardRarity: string, cardType: string): string => {
+  const canvas = document.createElement('canvas');
+  canvas.width = 800;
+  canvas.height = 800;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return PRESET_ARTWORKS[0].url;
+
+  let primary = '#C8A0FF';
+  let secondary = '#8250E6';
+  if (cardRarity.toLowerCase() === 'legendary') { primary = '#FFC864'; secondary = '#FF8C00'; }
+  else if (cardRarity.toLowerCase() === 'rare') { primary = '#64D2FF'; secondary = '#0055FF'; }
+  else if (cardRarity.toLowerCase() === 'epic') { primary = '#B388FF'; secondary = '#512DA8'; }
+  else if (cardRarity.toLowerCase() === 'common') { primary = '#94A3B8'; secondary = '#334155'; }
+
+  const bgGrad = ctx.createRadialGradient(400, 400, 40, 400, 400, 450);
+  bgGrad.addColorStop(0, '#12121E');
+  bgGrad.addColorStop(1, '#050508');
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, 800, 800);
+
+  ctx.save();
+  ctx.translate(400, 400);
+
+  for (let i = 1; i <= 8; i++) {
+    ctx.beginPath();
+    ctx.strokeStyle = i % 2 === 0 ? primary : secondary;
+    ctx.globalAlpha = 0.12 + (i * 0.05);
+    ctx.lineWidth = 1.5;
+    const radius = i * 42;
+    const sides = 4 + (i % 4) * 2;
+    for (let s = 0; s < sides; s++) {
+      const angle = (s * 2 * Math.PI) / sides + (i * 0.2);
+      const x = radius * Math.cos(angle);
+      const y = radius * Math.sin(angle);
+      if (s === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.stroke();
+  }
+
+  const coreGrad = ctx.createRadialGradient(0, 0, 10, 0, 0, 180);
+  coreGrad.addColorStop(0, primary);
+  coreGrad.addColorStop(0.35, secondary);
+  coreGrad.addColorStop(1, 'transparent');
+  ctx.fillStyle = coreGrad;
+  ctx.globalAlpha = 0.75;
+  ctx.beginPath();
+  ctx.arc(0, 0, 180, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.strokeStyle = primary;
+  ctx.globalAlpha = 0.35;
+  ctx.beginPath();
+  ctx.moveTo(-360, 0); ctx.lineTo(360, 0);
+  ctx.moveTo(0, -360); ctx.lineTo(0, 360);
+  ctx.stroke();
+
+  ctx.restore();
+
+  ctx.fillStyle = primary;
+  ctx.globalAlpha = 0.6;
+  ctx.font = 'bold 16px monospace';
+  ctx.fillText(`LATTICE // ${cardRarity.toUpperCase()} // ${cardType}`, 40, 60);
+  const hashVal = Math.abs(cardName.split('').reduce((acc, c) => (acc << 5) - acc + c.charCodeAt(0), 0));
+  ctx.fillText(`HASH: 0x${hashVal.toString(16).toUpperCase()}`, 40, 750);
+
+  return canvas.toDataURL('image/jpeg', 0.9);
+};
 
 export default function CardForge({ walletAddress, onCardMinted, onTransactionComplete }: CardForgeProps) {
   const [name, setName] = useState('AETHERIS THE AWAKENED');
   const [description, setDescription] = useState('Ancient cosmic construct harnessing void energy.');
-  const [image, setImage] = useState(PRESET_ARTWORKS[0]);
+  const [image, setImage] = useState(PRESET_ARTWORKS[0].url);
+  const [imageMode, setImageMode] = useState<'UPLOAD' | 'GALLERY' | 'PROCEDURAL' | 'URL'>('UPLOAD');
+  const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
   const [rarity, setRarity] = useState<'Mythic' | 'Legendary' | 'Epic' | 'Rare' | 'Common'>('Mythic');
   const [type, setType] = useState('SENTINEL');
   const [energy, setEnergy] = useState(50);
@@ -59,6 +266,47 @@ export default function CardForge({ walletAddress, onCardMinted, onTransactionCo
       default: return 'border-rarity-common';
     }
   };
+
+  const handleFileChange = async (file: File) => {
+    try {
+      setStatusMessage('Optimizing and loading image...');
+      const dataUrl = await compressAndLoadImage(file);
+      setImage(dataUrl);
+      setUploadedFileName(`${file.name} (${Math.round(file.size / 1024)} KB)`);
+      setStatusMessage(null);
+    } catch (err: any) {
+      console.error(err);
+      setStatusMessage(`Image Error: ${err.message || 'Failed to read image'}`);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      handleFileChange(e.dataTransfer.files[0]);
+    }
+  };
+
+  // Clipboard paste listener: enables instant pasting of screenshots or copied images anywhere in the studio
+  useEffect(() => {
+    const handlePaste = async (e: ClipboardEvent) => {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type.indexOf('image') !== -1) {
+          const file = items[i].getAsFile();
+          if (file) {
+            await handleFileChange(file);
+            setImageMode('UPLOAD');
+            break;
+          }
+        }
+      }
+    };
+    window.addEventListener('paste', handlePaste);
+    return () => window.removeEventListener('paste', handlePaste);
+  }, []);
 
   const handleForgeCard = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -283,28 +531,264 @@ export default function CardForge({ walletAddress, onCardMinted, onTransactionCo
               />
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-3 pt-2">
               <div className="flex items-center justify-between">
-                <label className="text-[10px] font-mono text-slate-400 font-bold tracking-widest">ASSET URL</label>
+                <label className="text-[10px] font-mono text-slate-400 font-bold tracking-widest flex items-center gap-1.5">
+                  <ImageIcon className="w-3.5 h-3.5 text-accent-cyan" />
+                  <span>RELIC ARTWORK & VISUAL ASSET</span>
+                </label>
+                <span className="text-[10px] font-mono text-emerald-400 font-bold">
+                  ✓ NO PUBLIC LINK REQUIRED
+                </span>
+              </div>
+
+              {/* Source Selector Tabs */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 bg-obsidian-950/80 p-1.5 rounded-xl border border-slate-800">
                 <button
                   type="button"
                   onClick={() => {
-                    const next = PRESET_ARTWORKS[(PRESET_ARTWORKS.indexOf(image) + 1) % PRESET_ARTWORKS.length];
-                    setImage(next);
+                    playClick();
+                    setImageMode('UPLOAD');
                   }}
-                  className="text-[10px] font-mono text-accent-cyan hover:underline flex items-center gap-1 cursor-pointer"
+                  className={`py-2 px-2 text-[10px] font-mono font-bold tracking-wider rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                    imageMode === 'UPLOAD'
+                      ? 'bg-slate-100 text-obsidian-950 shadow-sm'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-obsidian-900'
+                  }`}
                 >
-                  <Sparkles className="w-3 h-3" /> CYCLE ARTWORK
+                  <Upload className="w-3.5 h-3.5" />
+                  <span>DEVICE UPLOAD</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    playClick();
+                    setImageMode('GALLERY');
+                  }}
+                  className={`py-2 px-2 text-[10px] font-mono font-bold tracking-wider rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                    imageMode === 'GALLERY'
+                      ? 'bg-slate-100 text-obsidian-950 shadow-sm'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-obsidian-900'
+                  }`}
+                >
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>PRESETS (12)</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    playClick();
+                    setImageMode('PROCEDURAL');
+                    const gen = generateProceduralArt(name, rarity, type);
+                    setImage(gen);
+                    setUploadedFileName(`Procedural Matrix Hologram (${rarity})`);
+                  }}
+                  className={`py-2 px-2 text-[10px] font-mono font-bold tracking-wider rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                    imageMode === 'PROCEDURAL'
+                      ? 'bg-slate-100 text-obsidian-950 shadow-sm'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-obsidian-900'
+                  }`}
+                >
+                  <Radio className="w-3.5 h-3.5" />
+                  <span>HOLO GEN</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    playClick();
+                    setImageMode('URL');
+                  }}
+                  className={`py-2 px-2 text-[10px] font-mono font-bold tracking-wider rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                    imageMode === 'URL'
+                      ? 'bg-slate-100 text-obsidian-950 shadow-sm'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-obsidian-900'
+                  }`}
+                >
+                  <LinkIcon className="w-3.5 h-3.5" />
+                  <span>WEB URL</span>
                 </button>
               </div>
-              <input
-                type="text"
-                required
-                value={image}
-                onChange={(e) => setImage(e.target.value)}
-                className="w-full bg-obsidian-900 border border-slate-800 text-slate-100 text-sm font-mono rounded-xl px-4 py-3.5 focus:outline-none focus:border-accent-cyan transition-colors"
-                placeholder="https://"
-              />
+
+              {/* MODE 1: DEVICE UPLOAD (Drag & Drop + File Picker + Clipboard) */}
+              {imageMode === 'UPLOAD' && (
+                <div className="space-y-3">
+                  <div
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      setIsDragging(true);
+                    }}
+                    onDragLeave={() => setIsDragging(false)}
+                    onDrop={handleDrop}
+                    onClick={() => fileInputRef.current?.click()}
+                    className={`relative rounded-xl border-2 border-dashed p-6 text-center cursor-pointer transition-all ${
+                      isDragging
+                        ? 'border-accent-cyan bg-accent-cyan/10'
+                        : 'border-slate-800 hover:border-slate-700 bg-obsidian-950/60 hover:bg-obsidian-900/80'
+                    }`}
+                  >
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        if (e.target.files && e.target.files[0]) {
+                          handleFileChange(e.target.files[0]);
+                        }
+                      }}
+                    />
+
+                    <div className="flex flex-col items-center justify-center space-y-2">
+                      <div className="w-12 h-12 rounded-xl bg-obsidian-900 border border-slate-700 flex items-center justify-center text-accent-cyan group-hover:scale-110 transition-transform">
+                        <Upload className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <span className="text-xs font-mono font-bold text-slate-200">
+                          Click to browse device image
+                        </span>
+                        <span className="text-xs font-mono text-slate-500"> or drag & drop file here</span>
+                      </div>
+                      <p className="text-[10px] font-mono text-slate-500">
+                        PNG, JPG, JPEG, WEBP, GIF • Automatically optimized for on-chain storage
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Upload Status & Helper Controls */}
+                  <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
+                    {uploadedFileName ? (
+                      <div className="flex items-center space-x-2 text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-lg border border-emerald-500/20">
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        <span className="truncate max-w-[220px]">{uploadedFileName}</span>
+                      </div>
+                    ) : (
+                      <div className="text-[10px] font-mono text-slate-500">
+                        No image link required. Select any local photo from your device.
+                      </div>
+                    )}
+
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        try {
+                          if (navigator.clipboard && navigator.clipboard.read) {
+                            const clipboardItems = await navigator.clipboard.read();
+                            for (const item of clipboardItems) {
+                              const imageType = item.types.find((t) => t.startsWith('image/'));
+                              if (imageType) {
+                                const blob = await item.getType(imageType);
+                                const file = new File([blob], 'clipboard_image.png', { type: imageType });
+                                await handleFileChange(file);
+                                return;
+                              }
+                            }
+                          }
+                          alert('Tip: Press Ctrl+V anywhere on the page to paste a copied image directly!');
+                        } catch (e) {
+                          alert('Tip: Press Ctrl+V anywhere on the page to paste a copied image directly!');
+                        }
+                      }}
+                      className="text-[10px] font-mono text-slate-400 hover:text-accent-cyan bg-obsidian-900 hover:bg-obsidian-850 px-3 py-1.5 rounded-lg border border-slate-800 transition-colors flex items-center gap-1.5 cursor-pointer"
+                    >
+                      <Clipboard className="w-3 h-3" />
+                      <span>PASTE CLIPBOARD (Ctrl+V)</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* MODE 2: PRESET GALLERY (12 Curated Visuals) */}
+              {imageMode === 'GALLERY' && (
+                <div className="space-y-2">
+                  <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 max-h-60 overflow-y-auto pr-1 scrollbar-thin">
+                    {PRESET_ARTWORKS.map((preset) => {
+                      const isSelected = image === preset.url;
+                      return (
+                        <div
+                          key={preset.id}
+                          onClick={() => {
+                            playClick();
+                            setImage(preset.url);
+                            setUploadedFileName(preset.name);
+                          }}
+                          className={`group relative rounded-xl overflow-hidden cursor-pointer border-2 transition-all ${
+                            isSelected
+                              ? 'border-accent-cyan ring-2 ring-accent-cyan/40 scale-[1.02]'
+                              : 'border-slate-800 hover:border-slate-600 opacity-75 hover:opacity-100'
+                          }`}
+                        >
+                          <div className="h-16 w-full bg-obsidian-950 overflow-hidden">
+                            <img
+                              src={preset.url}
+                              alt={preset.name}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                            />
+                          </div>
+                          <div className="p-1.5 bg-obsidian-900/90 text-center">
+                            <div className="text-[9px] font-mono text-slate-300 font-bold truncate">
+                              {preset.name}
+                            </div>
+                          </div>
+                          {isSelected && (
+                            <div className="absolute top-1 right-1 bg-accent-cyan text-obsidian-950 p-0.5 rounded-full shadow-md">
+                              <CheckCircle2 className="w-3.5 h-3.5" />
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* MODE 3: PROCEDURAL MATRIX GENERATOR */}
+              {imageMode === 'PROCEDURAL' && (
+                <div className="p-4 bg-obsidian-950/70 border border-slate-800 rounded-xl space-y-3">
+                  <div className="space-y-1">
+                    <div className="text-xs font-mono font-bold text-slate-200">
+                      Autonomous Matrix Lattice Generator
+                    </div>
+                    <p className="text-[10px] font-mono text-slate-400">
+                      Synthesizes a unique geometric relic hologram matching your designated name ({name || 'RELIC'}), rarity tier ({rarity}), and archetype ({type}).
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      playClick();
+                      const gen = generateProceduralArt(name, rarity, type);
+                      setImage(gen);
+                      setUploadedFileName(`Procedural Matrix Hologram (${rarity})`);
+                    }}
+                    className="w-full py-2.5 px-4 bg-obsidian-900 hover:bg-obsidian-850 text-accent-cyan font-mono text-xs font-bold rounded-lg border border-accent-cyan/30 hover:border-accent-cyan transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <RefreshCw className="w-3.5 h-3.5" />
+                    <span>RE-GENERATE PROCEDURAL HOLOGRAM</span>
+                  </button>
+                </div>
+              )}
+
+              {/* MODE 4: EXTERNAL WEB URL (Fallback) */}
+              {imageMode === 'URL' && (
+                <div className="space-y-2">
+                  <input
+                    type="text"
+                    value={image.startsWith('data:') ? '' : image}
+                    onChange={(e) => {
+                      setImage(e.target.value);
+                      setUploadedFileName(null);
+                    }}
+                    className="w-full bg-obsidian-900 border border-slate-800 text-slate-100 text-xs font-mono rounded-xl px-4 py-3.5 focus:outline-none focus:border-accent-cyan transition-colors"
+                    placeholder="https://images.unsplash.com/... or direct image link"
+                  />
+                  <p className="text-[10px] font-mono text-slate-500">
+                    Paste any direct image URL (HTTPS).
+                  </p>
+                </div>
+              )}
             </div>
           </div>
 
@@ -445,6 +929,20 @@ export default function CardForge({ walletAddress, onCardMinted, onTransactionCo
                 </span>
                 <span className="px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold bg-obsidian-950/80 backdrop-blur-md border border-slate-700/50 text-slate-300 uppercase">
                   {type}
+                </span>
+              </div>
+
+              {/* Asset Origin Indicator */}
+              <div className="absolute bottom-3 left-3 flex items-center gap-1.5 px-2 py-1 rounded-md bg-obsidian-950/85 border border-slate-700/60 text-[9px] font-mono text-slate-300 backdrop-blur-md">
+                <span className="w-1.5 h-1.5 rounded-full bg-accent-cyan animate-pulse" />
+                <span>
+                  {imageMode === 'UPLOAD'
+                    ? (uploadedFileName ? 'DEVICE UPLOAD' : 'READY TO UPLOAD')
+                    : imageMode === 'GALLERY'
+                    ? 'PRESET ARTWORK'
+                    : imageMode === 'PROCEDURAL'
+                    ? 'PROCEDURAL HOLOGRAM'
+                    : 'EXTERNAL URL'}
                 </span>
               </div>
             </div>

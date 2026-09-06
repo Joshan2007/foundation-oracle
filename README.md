@@ -60,8 +60,13 @@ The platform is designed around a dark fantasy sci-fi universe where players tra
 - **Interactive Card Inspector**: Click any card to inspect full-screen high-resolution art, stat distributions, seller address, and contract status.
 
 ### 2. ⚒️ Relic Forge Studio (`CardForge.tsx`)
-- **Custom NFT Creation**: Users can configure relic names, descriptions, archetype categories, rarity tiers, and allocate stat points across Energy, Stability, and Signal.
-- **Live Card Hologram Preview**: Real-time rendering of the card's visual frame, dynamic rarity glowing borders, and stat bars as the user tweaks parameters.
+- **Zero-Friction Artwork Integration**: Multiple flexible artwork sources without requiring external public image hosting:
+  - **Local Device Upload**: Drag-and-drop or browse any local image file (PNG, JPG, JPEG, WEBP, GIF) with automated client-side canvas compression for seamless on-chain storage.
+  - **Preset Relic Gallery**: 12 curated high-resolution sci-fi and dark fantasy artworks across Sentinels, Relics, Spells, and Artifacts.
+  - **Autonomous Matrix Hologram Generator**: Real-time generative canvas synthesizing customized geometric rune lattices based on relic name, rarity, and archetype.
+  - **Instant Clipboard Paste**: Press `Ctrl+V` or click "Paste Clipboard" to directly import screenshots and copied images.
+  - **Web URL**: Fallback option for users with direct external links.
+- **Live Card Hologram Preview**: Real-time rendering of the card's visual frame, dynamic rarity glowing borders, asset source indicators, and stat bars as the user tweaks parameters.
 - **Automated IPFS Pinning**: Submits card parameters to `/api/ipfs/pin`, which formats standard ERC-721 metadata and generates a deterministic IPFS Content Identifier (CID).
 - **One-Click On-Chain Minting**: Direct wallet integration calling `GameCardNFT.mintCard(recipient, tokenURI)`.
 
