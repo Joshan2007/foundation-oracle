@@ -84,6 +84,7 @@ export default function CardForge({ walletAddress, onCardMinted, onTransactionCo
   const [signal, setSignal] = useState(50);
 
   const [isMinting, setIsMinting] = useState(false);
+  const isForgingRef = useRef(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [mintedResult, setMintedResult] = useState<{ tokenId: number; ipfsUri: string } | null>(null);
 
@@ -151,8 +152,10 @@ export default function CardForge({ walletAddress, onCardMinted, onTransactionCo
 
   const handleForgeCard = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isForgingRef.current) return;
 
     try {
+      isForgingRef.current = true;
       playClick();
       setIsMinting(true);
       setMintedResult(null);
@@ -164,15 +167,20 @@ export default function CardForge({ walletAddress, onCardMinted, onTransactionCo
 
       const provider = new ethers.BrowserProvider(ethereum);
 
-      // 1. Auto-connect if walletAddress is not set yet
+      // 1. Silent check: only prompt if account is not already connected
       let activeAddress = walletAddress;
       if (!activeAddress) {
-        setStatusMessage('Connecting MetaMask wallet...');
-        const accounts = await provider.send('eth_requestAccounts', []);
-        if (!accounts || accounts.length === 0) {
-          throw new Error('Please connect your MetaMask wallet to forge.');
+        const existing = await ethereum.request({ method: 'eth_accounts' });
+        if (existing && existing.length > 0) {
+          activeAddress = existing[0];
+        } else {
+          setStatusMessage('Connecting MetaMask wallet...');
+          const accounts = await provider.send('eth_requestAccounts', []);
+          if (!accounts || accounts.length === 0) {
+            throw new Error('Please connect your MetaMask wallet to forge.');
+          }
+          activeAddress = accounts[0];
         }
-        activeAddress = accounts[0];
       }
 
       // 2. Network Check: Support Sepolia (11155111) and Localhost (31337 / 1337)
@@ -310,6 +318,7 @@ export default function CardForge({ walletAddress, onCardMinted, onTransactionCo
       const errMsg = err.reason || err.shortMessage || err.message || 'Minting failed';
       setStatusMessage(`Forge Error: ${errMsg}`);
     } finally {
+      isForgingRef.current = false;
       setIsMinting(false);
     }
   };

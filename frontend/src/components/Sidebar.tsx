@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Filter, Layers, ArrowUpDown, BarChart3, Activity } from 'lucide-react';
+import { Filter, Layers, ArrowUpDown } from 'lucide-react';
 import { TabType } from './Header';
 import { useAudio } from './AudioEngine';
 
@@ -113,38 +113,6 @@ export default function Sidebar({
           <option value="RECENT" className="bg-obsidian-950">Recently Listed</option>
           <option value="RARITY" className="bg-obsidian-950">Rarity Tier</option>
         </select>
-      </div>
-
-      {/* Collection Stats Widget */}
-      <div className="runic-panel p-5 rounded-2xl space-y-4">
-        <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-          <div className="flex items-center space-x-2 font-telemetry text-slate-400">
-            <BarChart3 className="w-3.5 h-3.5" />
-            <span>[ 04 // LIVE TELEMETRY ]</span>
-          </div>
-          <span className="font-telemetry text-emerald-400 flex items-center gap-1">
-            <Activity className="w-3 h-3 animate-pulse" /> OPERATIONAL
-          </span>
-        </div>
-
-        <div className="grid grid-cols-2 gap-3">
-          <div className="bg-obsidian-900/80 p-3 rounded-xl border border-slate-800 hover:border-slate-700 transition-colors cursor-default" onMouseEnter={playHover}>
-            <div className="text-[9px] text-slate-400 font-mono tracking-widest">TOTAL CARDS</div>
-            <div className="text-base font-mono font-bold text-slate-100 mt-0.5">{stats.totalCards}</div>
-          </div>
-          <div className="bg-obsidian-900/80 p-3 rounded-xl border border-slate-800 hover:border-slate-700 transition-colors cursor-default" onMouseEnter={playHover}>
-            <div className="text-[9px] text-slate-400 font-mono tracking-widest">ON SALE</div>
-            <div className="text-base font-mono font-bold text-accent-cyan mt-0.5">{stats.onSale}</div>
-          </div>
-          <div className="bg-obsidian-900/80 p-3 rounded-xl border border-slate-800 hover:border-slate-700 transition-colors cursor-default" onMouseEnter={playHover}>
-            <div className="text-[9px] text-slate-400 font-mono tracking-widest">OWNERS</div>
-            <div className="text-base font-mono font-bold text-purple-400 mt-0.5">{stats.owners}</div>
-          </div>
-          <div className="bg-obsidian-900/80 p-3 rounded-xl border border-slate-800 hover:border-slate-700 transition-colors cursor-default" onMouseEnter={playHover}>
-            <div className="text-[9px] text-slate-400 font-mono tracking-widest">VOLUME</div>
-            <div className="text-base font-mono font-bold text-accent-cyan mt-0.5">{stats.volumeEth} ETH</div>
-          </div>
-        </div>
       </div>
     </aside>
   );

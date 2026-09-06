@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Zap, Shield, Radio, ShoppingBag, Eye, X, ExternalLink, Sparkles, AlertCircle } from 'lucide-react';
 import { ethers } from 'ethers';
 import contractsConfig from '../config/contracts.json';
@@ -53,6 +53,7 @@ export default function MarketplaceGrid({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCard, setSelectedCard] = useState<CardItem | null>(null);
   const [isBuying, setIsBuying] = useState(false);
+  const isBuyingRef = useRef(false);
   const [buyingListingId, setBuyingListingId] = useState<number | null>(null);
   const [txMessage, setTxMessage] = useState<string | null>(null);
 
@@ -208,8 +209,10 @@ export default function MarketplaceGrid({
       alert('Please connect your Web3 wallet first to purchase this card.');
       return;
     }
+    if (isBuyingRef.current) return;
 
     try {
+      isBuyingRef.current = true;
       playClick();
       setIsBuying(true);
       setBuyingListingId(card.listingId);
@@ -230,7 +233,7 @@ export default function MarketplaceGrid({
       const priceWei = ethers.parseEther(card.price);
 
       setTxMessage('Awaiting wallet signature & transaction broadcast...');
-      const tx = await mktContract.buyItem(nftAddress, card.tokenId, { value: priceWei });
+      const tx = await mktContract.buyItem(nftAddress, card.tokenId, { value: priceWei, gasLimit: 300000 });
       setTxMessage(`Transaction submitted! Hash: ${tx.hash.substring(0, 12)}...`);
 
       await tx.wait();
@@ -271,6 +274,8 @@ export default function MarketplaceGrid({
         setIsBuying(false);
         setBuyingListingId(null);
       }, 3000);
+    } finally {
+      isBuyingRef.current = false;
     }
   };
 

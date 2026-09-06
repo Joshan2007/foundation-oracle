@@ -171,23 +171,28 @@ export default function CollectionGrid({
     setListingMessage(null);
   };
 
+  const isListingRef = React.useRef(false);
+
   const handleExecuteListing = async () => {
     if (!selectedCardForSale || !walletAddress) return;
+    if (isListingRef.current) return;
     if (!listPriceEth || parseFloat(listPriceEth) <= 0) {
       alert('Please specify a valid price in ETH.');
       return;
     }
 
     try {
+      isListingRef.current = true;
       playClick();
       setIsListing(true);
-      setListingMessage('Initiating contract approval & marketplace listing...');
+      setListingMessage('Checking marketplace approvals...');
 
       const ethereum = (window as any).ethereum;
       if (!ethereum) throw new Error('No provider');
 
       const provider = new ethers.BrowserProvider(ethereum);
       const signer = await provider.getSigner();
+      const signerAddress = await signer.getAddress();
 
       const nftAddress = (contractsConfig as any).contracts?.GameCardNFT?.address || "";
       const nftAbi = (contractsConfig as any).contracts?.GameCardNFT?.abi || [];
@@ -197,15 +202,30 @@ export default function CollectionGrid({
       const nftContract = new ethers.Contract(nftAddress, nftAbi, signer);
       const mktContract = new ethers.Contract(mktAddress, mktAbi, signer);
 
-      // Step 1: Approve Marketplace contract
-      setListingMessage('Approving Marketplace smart contract...');
-      const approveTx = await nftContract.approve(mktAddress, selectedCardForSale.tokenId);
-      await approveTx.wait();
+      // Check if marketplace is already approved (avoids multiple MetaMask prompts!)
+      let isApproved = false;
+      try {
+        isApproved = await nftContract.isApprovedForAll(signerAddress, mktAddress);
+        if (!isApproved) {
+          const approved = await nftContract.getApproved(selectedCardForSale.tokenId);
+          if (approved && approved.toLowerCase() === mktAddress.toLowerCase()) {
+            isApproved = true;
+          }
+        }
+      } catch (checkErr) {
+        console.warn('Approval check notice:', checkErr);
+      }
+
+      if (!isApproved) {
+        setListingMessage('Step 1/2: Authorizing Marketplace (one-time approval)...');
+        const approveTx = await nftContract.setApprovalForAll(mktAddress, true, { gasLimit: 100000 });
+        await approveTx.wait();
+      }
 
       // Step 2: Call listItem on Marketplace contract
-      setListingMessage('Broadcasting listItem transaction to Ethereum...');
+      setListingMessage('Broadcasting listing transaction to Ethereum...');
       const priceWei = ethers.parseEther(listPriceEth);
-      const listTx = await mktContract.listItem(nftAddress, selectedCardForSale.tokenId, priceWei);
+      const listTx = await mktContract.listItem(nftAddress, selectedCardForSale.tokenId, priceWei, { gasLimit: 250000 });
       await listTx.wait();
 
       setListingMessage('Card successfully listed on Mythic Marketplace!');
@@ -229,6 +249,8 @@ export default function CollectionGrid({
       setTimeout(() => {
         setIsListing(false);
       }, 3000);
+    } finally {
+      isListingRef.current = false;
     }
   };
 
